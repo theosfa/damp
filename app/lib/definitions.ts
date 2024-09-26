@@ -7,4 +7,28 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  task_ids: JSON;
+  project_ids: JSON;
 };
+
+export type Task = {
+  id: string;
+  title: string;
+  task: string;
+  creator_id: string;
+  worker_ids: JSON;
+  status: 'todo' | 'done' | 'inprogress';
+}
+
+export type Project = {
+  id: string;
+  title: string;
+  description: string;
+  deadline: string;
+  priority_ids: JSON;
+  task_ids: JSON;
+  admin_ids: JSON;
+  manager_ids: JSON;
+  worker_ids: JSON;
+}
+
