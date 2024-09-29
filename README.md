@@ -2,6 +2,10 @@
 
 DAMP (Dashboard for Managing Projects) is a comprehensive web-based application designed to streamline the management of projects and teams within a company. The platform offers easy project and task creation, real-time tracking, and insightful reporting, all in one place. With user role management, responsive design, and real-time updates, DAMP enhances collaboration and provides clear visibility into project progress.
 
+### [Live Demo: DAMP Application](https://damp-theos.vercel.app/)
+
+Click the link above to check out the live version of the application!
+
 ## Key Features
 
 ### 🗂️ Project Management
@@ -62,3 +66,5 @@ DAMP (Dashboard for Managing Projects) is a comprehensive web-based application 
 ---
 
 DAMP is designed to improve the efficiency of project management, making it easier for teams to collaborate and stay on track. Its clean and intuitive interface ensures that users can manage their projects effectively, whether they’re on a desktop or a mobile device.
+
+### [Live Demo: DAMP Application](https://damp-theos.vercel.app/)

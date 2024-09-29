@@ -1,8 +1,10 @@
 import { signOut } from '@/auth'
+import Link from 'next/link'
 export default function SuccesfullPage () {
     return (
     <main>
         <h1>Logged in succesfully</h1>
+        <Link href="/profile">To profile</Link>
         <form
           action={async () => {
             'use server';
@@ -10,7 +12,6 @@ export default function SuccesfullPage () {
           }}
         >
           <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            
             <div className="hidden md:block">Sign Out</div>
           </button>
         </form>
