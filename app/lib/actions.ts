@@ -74,24 +74,26 @@ export async function authenticate(
 ) {
   try {
     await signIn('credentials', formData);
-
     const validatedFields = SignupFormSchema.safeParse({
       email: formData.get('email'),
     });
     
     // If validation fails, return the error
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-      };
-    }
+    
   
-    const { email } = validatedFields.data;
-
-    const client = await db.connect();
-  // Check if user already exists
-    const user = await client.sql`SELECT * FROM users WHERE email = ${email}`;
-    await createSession(user.rows[0].id);
+    const email = validatedFields.data;
+    if (email){
+      const client = await db.connect();
+    // Check if user already exists
+      const user = await client.sql`SELECT * FROM users WHERE email = ${email.email}`;
+      console.log(user.rows[0])
+  
+      const foundUser = user.rows[0];
+  
+      await createSession(foundUser.id);
+    }
+    
+    
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -104,6 +106,8 @@ export async function authenticate(
     throw error;
   }
 }
+
+
 
 export async function fetchUserData(userId: string) {
   const client = await db.connect();
