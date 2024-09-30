@@ -2,7 +2,6 @@ import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { SessionPayload } from '@/app/lib/definitions'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation';
 
 // Use TextEncoder to convert the secret key into a Uint8Array
 const secretKey = process.env.SESSION_SECRET;
@@ -65,5 +64,4 @@ export async function updateSession() {
   
   export async function logout() {
     deleteSession()
-    redirect('/')
   }
