@@ -23,6 +23,7 @@ export async function authenticate(
 ) {
   try {
     await signIn('credentials', formData);
+    // If login was successful, create a session and redirect to dashboard
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
