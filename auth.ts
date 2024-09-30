@@ -6,6 +6,7 @@ import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 import { authConfig } from './auth.config';
 import { createSession } from '@/app/lib/session';
+import { SignupFormSchema } from '@/app/lib/definitions';
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -15,6 +16,53 @@ async function getUser(email: string): Promise<User | undefined> {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
   }
+}
+
+export async function signUp(
+  formData: FormData,
+) {
+  // Validate form fields
+  const validatedFields = SignupFormSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+  
+  // If validation fails, return the error
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { name, email, password } = validatedFields.data;
+
+  // Hash the user's password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const client = await sql.connect();
+
+  // Check if user already exists
+  const existingUser = await client.sql`SELECT * FROM users WHERE email = ${email}`;
+  if (existingUser.rowCount > 0) {
+    return { error: 'User already exists' };
+  }
+
+  // Insert new user into the database
+  const user = await client.sql`
+    INSERT INTO users (name, email, password, task_ids, project_ids)
+    VALUES (${name}, ${email}, ${hashedPassword}, ${JSON.stringify([])}, ${JSON.stringify([])})
+    RETURNING id
+  `;
+
+  // If user creation fails, return an error
+  if (!user) {
+    return { error: 'An error occurred while creating your account.' };
+  }
+  await createSession(user.rows[0].id);
+  await signIn('credentials', formData);
+  // Create session for the user
+
+  // Redirect user to profile page
 }
 
 export const { auth, signIn, signOut } = NextAuth({
