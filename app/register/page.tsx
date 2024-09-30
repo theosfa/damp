@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AtSymbolIcon, KeyIcon, UserIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { signup } from '@/app/lib/actions'; // Import your signup function
+import { signIn } from '@/auth';
 
 export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -27,7 +28,7 @@ export default function RegisterPage() {
         setErrorMessage(response.error);
         setIsLoading(false);
       } else {
-        // If no errors, the user is automatically redirected to the profile page
+        await signIn('credentials', formData);
       }
     } catch (err) {
       setErrorMessage('Something went wrong. Please try again later.');

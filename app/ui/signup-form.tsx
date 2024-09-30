@@ -1,10 +1,13 @@
 'use client'
  
 import { useFormState, useFormStatus } from 'react-dom'
-import { signup } from '@/app/lib/actions/auth'
+import {signup} from '@/app/actions/auth';
  
 export function SignupForm() {
-  const [state, action] = useFormState(signup, undefined)
+  const [state, action] = useFormState(
+    signup, 
+    undefined
+  )
  
   return (
     <form action={action}>

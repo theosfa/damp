@@ -1,12 +1,12 @@
 // app/profile/page.tsx
 import { cookies } from 'next/headers';
-import { decrypt } from '@/app/lib/session'; // Your custom session decrypt function
+import { decrypt } from '@/app/lib/session';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { fetchUserData } from '@/app/lib/actions';
 
 export default async function ProfilePage() {
-  const sessionCookie = cookies().get('authjs.session-token')?.value;
+  const sessionCookie = cookies().get('session')?.value;
   console.log(sessionCookie);
   
   // Decrypt the session to get the user data
@@ -14,9 +14,9 @@ export default async function ProfilePage() {
   console.log(session);
   
   // Check if session is valid, if not redirect to login
-  // if (!session) {
-  //   redirect('/login'); // If no session, redirect to login
-  // }
+  if (!session) {
+    redirect('/login'); // If no session, redirect to login
+  }
 
   // Fetch user data using userId from the session
   const userData = await fetchUserData(session.userId);

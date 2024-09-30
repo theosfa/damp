@@ -2,15 +2,11 @@
 
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
-// app/lib/actions.ts
-
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres'; // Ensure this imports your db connection
 import { SignupFormSchema } from '@/app/lib/definitions';
 import { createSession } from '@/app/lib/session'; // Session handling logic
-import { formatDynamicAPIAccesses } from 'next/dist/server/app-render/dynamic-rendering';
 
 export async function signup(formData: FormData) {
   // Validate form fields
@@ -50,12 +46,12 @@ export async function signup(formData: FormData) {
   if (!user) {
     return { error: 'An error occurred while creating your account.' };
   }
-
+  await signIn('credentials', formData);
   // Create session for the user
   await createSession(user.rows[0].id);
 
   // Redirect user to profile page
-  redirect('/session');
+  redirect('/succesfull');
 }
 
 
@@ -74,37 +70,17 @@ export async function authenticate(
 ) {
   try {
     await signIn('credentials', formData);
-    const validatedFields = SignupFormSchema.safeParse({
-      email: formData.get('email'),
-    });
-    
-    // If validation fails, return the error
-    
-  
-    const email = validatedFields.data;
-    if (email){
-      const client = await db.connect();
-    // Check if user already exists
-      const user = await client.sql`SELECT * FROM users WHERE email = ${email.email}`;
-      console.log(user.rows[0])
-  
-      const foundUser = user.rows[0];
-  
-      await createSession(foundUser.id);
-    }
-    
-    
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
           return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
+          default:
+            return 'Something went wrong.';
+          }
+        }
+        throw error;
       }
-    }
-    throw error;
-  }
 }
 
 

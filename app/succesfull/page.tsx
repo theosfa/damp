@@ -1,5 +1,6 @@
 import { signOut } from '@/auth'
 import Link from 'next/link'
+import { deleteSession } from '@/app/lib/session';
 export default function SuccesfullPage () {
     return (
     <main>
@@ -8,6 +9,7 @@ export default function SuccesfullPage () {
         <form
           action={async () => {
             'use server';
+            await deleteSession();
             await signOut();
           }}
         >

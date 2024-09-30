@@ -5,6 +5,7 @@ import { sql } from '@vercel/postgres';
 import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 import { authConfig } from './auth.config';
+import { createSession } from '@/app/lib/session';
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -32,7 +33,11 @@ export const { auth, signIn, signOut } = NextAuth({
           if (!user) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (passwordsMatch){
+            console.log("Hello from auth34")
+            await createSession(user.id);
+            return user;
+          } 
         }
 
         console.log('Invalid credentials');
