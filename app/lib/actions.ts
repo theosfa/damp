@@ -17,25 +17,70 @@ export type State = {
   message?: string | null;
 };
 
+// export async function authenticate(
+//   prevState: string | undefined,
+//   formData: FormData,
+// ) {
+//   try {
+//     // await signIn('credentials', formData);
+//     const result = await signIn('credentials', {
+//       redirect: false, // Prevent default redirect behavior
+//       email: formData.get('email'),
+//       password: formData.get('password'),
+//     });
+
+//     if (result?.error) {
+//       return { success: false, errorMessage: result.error };
+//     }
+
+//     // Manually redirect after successful login
+//     redirect('/dashboard/profile');
+//     // If login was successful, create a session and redirect to dashboard
+//   } catch (error) {
+//     if (error instanceof AuthError) {
+//       switch (error.type) {
+//         case 'CredentialsSignin':
+//           return 'Invalid credentials.';
+//           default:
+//             return 'Something went wrong.';
+//           }
+//         }
+//         throw error;
+//       }
+// }
+
 export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData,
-) {
+  state: { success: boolean; errorMessage?: string | undefined } | undefined,
+  formData: FormData
+): Promise<{ success: boolean; errorMessage?: string | undefined }> {
   try {
-    await signIn('credentials', formData);
-    // If login was successful, create a session and redirect to dashboard
+    const result = await signIn('credentials', {
+      redirect: false, // Prevent automatic redirection
+      email: formData.get('email'),
+      password: formData.get('password'),
+    });
+
+    if (result?.error) {
+      return {
+        success: false,
+        errorMessage: result.error || 'Invalid credentials.',
+      };
+    }
+    redirect('/dashboard');
+    // On success, redirect or set success status
+    return {
+      success: true,
+      errorMessage: undefined, // No error in success case
+    };
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.';
-          default:
-            return 'Something went wrong.';
-          }
-        }
-        throw error;
-      }
+    return {
+      success: false,
+      errorMessage: 'Something went wrong during authentication.',
+    };
+  }
 }
+
+
 
 
 export async function register(
