@@ -12,9 +12,10 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
 
-      if (nextUrl.pathname === '/profile') {
-        return isLoggedIn; // Only allow if logged in
-      }
+      // if (nextUrl.pathname === '/profile') {
+      //   return isLoggedIn; // Only allow if logged in
+      // }
+      console.log(auth?.user);
       
       const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
       if (isOnDashboard) {
