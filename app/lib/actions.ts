@@ -66,7 +66,6 @@ export async function authenticate(
         errorMessage: result.error || 'Invalid credentials.',
       };
     }
-    redirect('/dashboard');
     // On success, redirect or set success status
     return {
       success: true,
