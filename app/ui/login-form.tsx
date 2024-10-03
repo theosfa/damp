@@ -106,7 +106,7 @@ export default function LoginForm() {
 
   // Extract error message from state if it exists
   const errorMessage = state?.errorMessage;
-  if (errorMessage){
+  if (state?.success){
     redirect('/dashboard');
   }
 
