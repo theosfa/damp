@@ -41,13 +41,7 @@ export async function signUp(
   // Hash the user's password
   const hashedPassword = await bcrypt.hash(password, 10);
   const client = await sql.connect();
-
-  // Check if user already exists
-  const existingUser = await client.sql`SELECT * FROM users WHERE email = ${email}`;
-  if (existingUser.rowCount > 0) {
-    return { error: 'User already exists' };
-  }
-
+  
   await client.sql`
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -58,7 +52,14 @@ export async function signUp(
       project_ids JSON
     );
   `;
-  
+
+  // Check if user already exists
+  const existingUser = await client.sql`SELECT * FROM users WHERE email = ${email}`;
+  if (existingUser.rowCount > 0) {
+    return { error: 'User already exists' };
+  }
+
+
   // Insert new user into the database
   const user = await client.sql`
     INSERT INTO users (name, email, password, task_ids, project_ids)
