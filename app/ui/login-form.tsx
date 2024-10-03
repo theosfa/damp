@@ -96,6 +96,7 @@ import {
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
 import { useActionState } from 'react';
+import { redirect } from 'next/navigation';
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(
@@ -105,6 +106,9 @@ export default function LoginForm() {
 
   // Extract error message from state if it exists
   const errorMessage = state?.errorMessage;
+  if (errorMessage){
+    redirect('/dashboard');
+  }
 
   return (
     <form action={formAction} className="space-y-3">
